@@ -21,7 +21,7 @@ import com.google.gson.reflect.*;
 //     Hourly forecast: unavailable
 //     Daily forecast: unavailable
 //     Calls per minute: 60
-//     3 hour forecast: 5 days
+//     3-hour forecast: 5 days
 //
 // Details on the use of the API can be found here:
 //     https://openweathermap.org/current
@@ -46,15 +46,16 @@ import com.google.gson.reflect.*;
 public class CSC245_Project3_Insecure {
 
 	// Java Maps are used with many API interactions. OpenWeatherMap also uses Java Maps.
-	public static Map<String, Object> jsonToMap(String str) {
-		Map<String, Object> map = new Gson().fromJson(
-				str, new TypeToken<HashMap<String, Object>>() {}.getType()
-				);
-		return map;
+	public static Map<String, Object> jsonToMap(String str) { // 20220320 tml: Minimize scope of variables
+		return new Gson().fromJson(
+				str, new TypeToken<HashMap<String, Object>>() {
+				}.getType()
+		);
 	}
 
-	public static String getTempForCity (String cityString, String api_key) {
-		String urlString = "http://api.openweathermap.org/data/2.5/weather?q=" +
+	public static String getTempForCity(String cityString, String api_key) {
+		// 20220320 tml: http links were not secure. changed from http to https
+		String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" +
 				cityString + "&appid=" + api_key + "&units=imperial";
 		try {
 			StringBuilder result = new StringBuilder();
@@ -62,16 +63,19 @@ public class CSC245_Project3_Insecure {
 			URLConnection conn = url.openConnection();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line;
-			while ((line = rd.readLine()) != null)
-				result .append(line);
+			//20220320 tml: Use braces for the body of an if, for, or while statement
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+
 			System.out.println(result);
 
-			Map<String, Object > respMap = jsonToMap (result.toString());
-			Map<String, Object > mainMap = jsonToMap (respMap.get("main").toString());
+			Map<String, Object> respMap = jsonToMap(result.toString());
+			Map<String, Object> mainMap = jsonToMap(respMap.get("main").toString());
 
 			return mainMap.get("temp").toString();
 
-		} catch (IOException e){
+		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			return "Temp not available (API problem?)";
 		}
@@ -79,20 +83,20 @@ public class CSC245_Project3_Insecure {
 	}
 
 	public static void main(String[] args) {
-		String owm = "",		// Include the API key here
+		String owm = "",        // Include the API key here
 				LOCATION = "Castle Rock, US";
-		String urlString = "http://api.openweathermap.org/data/2.5/weather?q=" + LOCATION +
-				"&appid=" + owm + "&units=imperial";
+		// 20220319 tml: Removed urlString lines. Minimize the scope of variables
 
 		// The following line is out of scope for mitigation and can be ignored.
 //		System.out.println("URL invoked to get temperature data=" + urlString);
 
-		for (int i=0;i<10;i++);
-			System.out.println("Current temperature in " + LOCATION +" is: "
-					+ getTempForCity(LOCATION,owm) + " degrees.");
-
-		urlString = "";
-
+		//20220320 tml: Use braces for the body of an if, for, or while statement
+		//20220320 tml: Do not place a semicolon immediately following an if, for, or while condition
+		for (int i = 0; i < 10; i++) {
+			System.out.println("Current temperature in " + LOCATION + " is: "
+					+ getTempForCity(LOCATION, owm) + " degrees.");
+		}
+		//20220320 tml: FIO14-J. Perform proper cleanup at program termination
+		Runtime.getRuntime().exit(0);
 	}
-
 }
