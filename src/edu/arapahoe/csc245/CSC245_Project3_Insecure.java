@@ -1,3 +1,12 @@
+/**
+ * Taylor Lee
+ * Doug Lundin
+ * CSC245-380 Project 3
+ * 20220320
+ */
+
+
+
 package edu.arapahoe.csc245;
 
 import java.io.BufferedReader;
@@ -83,18 +92,19 @@ public class CSC245_Project3_Insecure {
 	}
 
 	public static void main(String[] args) {
-		String owm = "",        // Include the API key here
-				LOCATION = "Castle Rock, US";
+		// 20220320 tml: Do not declare more than one variable per declaration
+		// 20220320 tml: Use meaningful symbolic constants to represent literal values in program logic
 		// 20220319 tml: Removed urlString lines. Minimize the scope of variables
+		String API_key = "";        // Include the API key here
+		String LOCATION = "Castle Rock, US";
 
 		// The following line is out of scope for mitigation and can be ignored.
 //		System.out.println("URL invoked to get temperature data=" + urlString);
-
-		//20220320 tml: Use braces for the body of an if, for, or while statement
+		//20220320 tml: Guideline Use braces for the body of an if, for, or while statement
 		//20220320 tml: Do not place a semicolon immediately following an if, for, or while condition
 		for (int i = 0; i < 10; i++) {
 			System.out.println("Current temperature in " + LOCATION + " is: "
-					+ getTempForCity(LOCATION, owm) + " degrees.");
+					+ getTempForCity(LOCATION, API_key) + " degrees.");
 		}
 		//20220320 tml: FIO14-J. Perform proper cleanup at program termination
 		Runtime.getRuntime().exit(0);
